@@ -1,102 +1,160 @@
-import { ScrollView, Text, View } from 'react-native';
+import { useCallback, useState } from 'react';
+import { ActivityIndicator, RefreshControl, ScrollView, Text, View, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useTheme } from '../../theme/useTheme';
 import { spacing, radius } from '../../theme/colors';
 import Card from '../../components/Card';
 import Badge from '../../components/Badge';
 import ScreenHeader from '../../components/ScreenHeader';
-import { mockJourney, mockTrendEvents, mockTrendPoints } from '../../data/mockData';
-import type { OrderStatus } from '../../types';
+import { getPromTrend, getVisitReports } from '../../api/patient';
+import type { PromTrend, VisitReport } from '../../api/patient';
 
-const STATUS_TONE: Record<OrderStatus, 'success' | 'warning' | 'primary' | 'neutral'> = {
-  completed: 'success',
-  active: 'primary',
-  pending: 'warning',
-  scheduled: 'neutral',
-};
-
-function TrendMini() {
+function TrendMini({ trend }: { trend: PromTrend | null }) {
   const { colors } = useTheme();
-  const known = mockTrendPoints.filter((p) => p.score !== null);
-  const w = 320, h = 90, padX = 24, padY = 16;
-  const maxIdx = mockTrendPoints.length - 1;
-  const x = (i: number) => padX + (i / maxIdx) * (w - padX * 2);
-  const y = (s: number) => padY + (1 - s / 100) * (h - padY * 2);
+
+  if (!trend) {
+    return (
+      <Card style={{ alignItems: 'center', paddingVertical: spacing.lg }}>
+        <ActivityIndicator color={colors.primary} />
+      </Card>
+    );
+  }
+
+  const known = trend.points.filter((p) => p.score !== null);
 
   return (
     <Card>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary }}>Your Progress</Text>
-        {known.length >= 2 && (
+        <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary }}>
+          Your Progress{trend.promName ? ` — ${trend.promName}` : ''}
+        </Text>
+        {trend.improvement != null && (
           <Badge
-            label={`${known[known.length - 1].score! - known[0].score! >= 0 ? '▲ +' : '▼ '}${known[known.length - 1].score! - known[0].score!} from baseline`}
+            label={`${trend.improvement >= 0 ? '▲ +' : '▼ '}${trend.improvement} from baseline`}
             tone="success"
           />
         )}
       </View>
-      <Text style={{ color: colors.textMuted, fontSize: 11, marginBottom: 6 }}>
-        Missing check-ins show as gaps — we never invent a score.
-      </Text>
-      {mockTrendEvents.map((ev) => (
-        <Text key={ev.label} style={{ fontSize: 11, color: colors.textMuted, marginBottom: 6 }}>
-          🔹 {ev.label} — {ev.date}
+      {known.length === 0 ? (
+        <Text style={{ color: colors.textMuted, fontSize: 12.5 }}>
+          No check-ins scored yet — this fills in once a PROM questionnaire is completed.
         </Text>
-      ))}
+      ) : (
+        <>
+          <Text style={{ color: colors.textMuted, fontSize: 11, marginBottom: 6 }}>
+            Missing check-ins show as gaps — we never invent a score.
+          </Text>
+          {trend.events.map((ev) => (
+            <Text key={`${ev.type}-${ev.date}`} style={{ fontSize: 11, color: colors.textMuted, marginBottom: 6 }}>
+              🔹 {ev.label} — {ev.date}
+            </Text>
+          ))}
+        </>
+      )}
     </Card>
   );
 }
 
+const REPORT_TYPE_LABEL: Record<VisitReport['reportType'], string> = {
+  physician: 'Physician Evaluation',
+  surgery: 'Surgery Evaluation',
+};
+
 export default function JourneyScreen() {
   const { colors } = useTheme();
+  const router = useRouter();
+  const [reports, setReports] = useState<VisitReport[] | null>(null);
+  const [trend, setTrend] = useState<PromTrend | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    try {
+      const [reportsData, trendData] = await Promise.all([getVisitReports(), getPromTrend()]);
+      setReports(reportsData);
+      setTrend(trendData);
+      setError(null);
+    } catch {
+      setError('Could not load your visit history.');
+    }
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load])
+  );
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await load();
+    setRefreshing(false);
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: spacing.xxl }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+      >
         <ScreenHeader title="Your Journey" subtitle="Visits, check-ins, and what your doctor has asked for" />
 
         <View style={{ paddingHorizontal: spacing.xl, gap: spacing.lg }}>
-          <TrendMini />
+          <TrendMini trend={trend} />
 
           <View>
-            <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginBottom: 10 }}>Visit Timeline</Text>
-            <View>
-              {mockJourney.map((visit, i) => (
-                <View key={visit.id} style={{ flexDirection: 'row', gap: 12 }}>
-                  <View style={{ alignItems: 'center', width: 20 }}>
-                    <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: colors.primary, marginTop: 4 }} />
-                    {i < mockJourney.length - 1 && <View style={{ width: 2, flex: 1, backgroundColor: colors.border, marginTop: 4 }} />}
-                  </View>
-                  <Card style={{ flex: 1, marginBottom: spacing.md }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={{ fontSize: 11, color: colors.textMuted, fontWeight: '600' }}>{visit.date}</Text>
-                        <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginTop: 2 }}>{visit.type}</Text>
-                        {visit.diagnosis && <Text style={{ fontSize: 12.5, color: colors.textSecondary, marginTop: 3 }}>{visit.diagnosis}</Text>}
-                        {visit.physician && <Text style={{ fontSize: 11.5, color: colors.textMuted, marginTop: 2 }}>{visit.physician}</Text>}
-                      </View>
-                      {visit.promScore !== null && visit.promScore !== undefined && (
-                        <View style={{ alignItems: 'center' }}>
-                          <Text style={{ fontSize: 18, fontWeight: '800', color: colors.primary }}>{visit.promScore}</Text>
-                          <Text style={{ fontSize: 9, color: colors.textMuted }}>/ 100</Text>
-                        </View>
-                      )}
-                    </View>
+            <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginBottom: 10 }}>Visit Reports</Text>
 
-                    {visit.orders.length > 0 && (
-                      <View style={{ marginTop: 12, gap: 8, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 10 }}>
-                        {visit.orders.map((o) => (
-                          <View key={o.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                            <Text style={{ fontSize: 16 }}>{o.icon}</Text>
-                            <Text style={{ flex: 1, fontSize: 12.5, color: colors.textPrimary, fontWeight: '600' }}>{o.title}</Text>
-                            <Badge label={o.status} tone={STATUS_TONE[o.status]} />
+            {reports === null && !error ? (
+              <View style={{ paddingVertical: spacing.xxl, alignItems: 'center' }}>
+                <ActivityIndicator color={colors.primary} />
+              </View>
+            ) : error ? (
+              <Card style={{ alignItems: 'center', gap: 4 }}>
+                <Text style={{ color: colors.danger, fontSize: 13 }}>{error}</Text>
+              </Card>
+            ) : reports!.length === 0 ? (
+              <Card style={{ alignItems: 'center', gap: 4 }}>
+                <Ionicons name="document-text-outline" size={24} color={colors.textMuted} />
+                <Text style={{ color: colors.textMuted, fontSize: 13 }}>No visit reports yet</Text>
+              </Card>
+            ) : (
+              <View>
+                {reports!.map((visit, i) => (
+                  <View key={visit.id} style={{ flexDirection: 'row', gap: 12 }}>
+                    <View style={{ alignItems: 'center', width: 20 }}>
+                      <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: colors.primary, marginTop: 4 }} />
+                      {i < reports!.length - 1 && <View style={{ width: 2, flex: 1, backgroundColor: colors.border, marginTop: 4 }} />}
+                    </View>
+                    <Pressable onPress={() => router.push(`/report/${visit.id}`)} style={{ flex: 1, marginBottom: spacing.md }}>
+                      <Card>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ fontSize: 11, color: colors.textMuted, fontWeight: '600' }}>{visit.date}</Text>
+                            <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginTop: 2 }}>
+                              {REPORT_TYPE_LABEL[visit.reportType]}
+                            </Text>
+                            {visit.diagnosis && <Text style={{ fontSize: 12.5, color: colors.textSecondary, marginTop: 3 }}>{visit.diagnosis}</Text>}
+                            <Text style={{ fontSize: 11.5, color: colors.textMuted, marginTop: 2 }}>{visit.providerName}</Text>
                           </View>
-                        ))}
-                      </View>
-                    )}
-                  </Card>
-                </View>
-              ))}
-            </View>
+                          <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                        </View>
+
+                        {visit.documents.length > 0 && (
+                          <View style={{ marginTop: 12, flexDirection: 'row', alignItems: 'center', gap: 8, borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 10 }}>
+                            <Ionicons name="attach-outline" size={16} color={colors.primary} />
+                            <Text style={{ fontSize: 12.5, color: colors.textPrimary, fontWeight: '600' }}>
+                              {visit.documents.length} attached document{visit.documents.length === 1 ? '' : 's'}
+                            </Text>
+                          </View>
+                        )}
+                      </Card>
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>

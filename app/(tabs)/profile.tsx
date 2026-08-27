@@ -5,7 +5,7 @@ import { useTheme } from '../../theme/useTheme';
 import { spacing, radius } from '../../theme/colors';
 import Card from '../../components/Card';
 import ScreenHeader from '../../components/ScreenHeader';
-import { mockPatient } from '../../data/mockData';
+import { useSession } from '../../context/AuthContext';
 
 function Row({ icon, label, value, onPress }: { icon: keyof typeof Ionicons.glyphMap; label: string; value?: string; onPress?: () => void }) {
   const { colors } = useTheme();
@@ -29,15 +29,18 @@ function Divider() {
 
 export default function ProfileScreen() {
   const { colors } = useTheme();
+  const { patient, signOut } = useSession();
   const [notifications, setNotifications] = useState(true);
   const [reminders, setReminders] = useState(true);
 
   const handleLogout = () => {
     Alert.alert('Log Out', 'Are you sure you want to log out?', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Log Out', style: 'destructive', onPress: () => {} },
+      { text: 'Log Out', style: 'destructive', onPress: () => signOut() },
     ]);
   };
+
+  if (!patient) return null;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -47,18 +50,20 @@ export default function ProfileScreen() {
         <View style={{ paddingHorizontal: spacing.xl, gap: spacing.lg }}>
           {/* Identity card */}
           <Card style={{ alignItems: 'center', gap: 6 }}>
-            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: mockPatient.avatarColor, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
               <Text style={{ color: '#fff', fontSize: 22, fontWeight: '800' }}>
-                {mockPatient.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}
+                {patient.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}
               </Text>
             </View>
-            <Text style={{ fontSize: 17, fontWeight: '800', color: colors.textPrimary, marginTop: 4 }}>{mockPatient.name}</Text>
-            <Text style={{ fontSize: 12.5, color: colors.textMuted }}>{mockPatient.mrn} · {mockPatient.age} yrs · {mockPatient.gender}</Text>
+            <Text style={{ fontSize: 17, fontWeight: '800', color: colors.textPrimary, marginTop: 4 }}>{patient.name}</Text>
+            <Text style={{ fontSize: 12.5, color: colors.textMuted }}>
+              {patient.mrn}{'age' in patient ? ` · ${patient.age} yrs · ${patient.gender}` : ''}
+            </Text>
           </Card>
 
           {/* Account */}
           <Card style={{ paddingVertical: 4 }}>
-            <Row icon="call-outline" label="Phone" value={mockPatient.phone} onPress={() => {}} />
+            <Row icon="call-outline" label="Phone" value={patient.phone} onPress={() => {}} />
             <Divider />
             <Row icon="person-outline" label="Personal Details" onPress={() => {}} />
             <Divider />
