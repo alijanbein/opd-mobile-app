@@ -21,6 +21,8 @@ export type PatientProfile = {
   mrn: string;
   bodyArea: string;
   phone: string;
+  email: string;
+  address: string;
   appointmentDate: string;
   appointmentTime: string;
 };
@@ -137,6 +139,11 @@ export async function verifyOtp(phone: string, code: string) {
 
 export async function getMe() {
   const res = await api.get<PatientProfile>('/api/patient/me');
+  return res.data;
+}
+
+export async function updateMe(email: string, address: string) {
+  const res = await api.patch<PatientProfile>('/api/patient/me', { email, address });
   return res.data;
 }
 

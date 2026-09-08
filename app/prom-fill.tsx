@@ -45,7 +45,7 @@ export default function PromFillScreen() {
           <Ionicons name="close" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textPrimary }}>
-          {promName || 'Check-in'}
+          {promName || 'Patient Form'}
         </Text>
       </View>
 

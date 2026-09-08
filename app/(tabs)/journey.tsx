@@ -100,7 +100,7 @@ export default function JourneyScreen() {
       >
         <ScreenHeader title="Your Journey" subtitle="Visits, check-ins, and what your doctor has asked for" />
 
-        <View style={{ paddingHorizontal: spacing.xl, gap: spacing.lg }}>
+        <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.md, gap: spacing.lg }}>
           <TrendMini trend={trend} />
 
           <View>

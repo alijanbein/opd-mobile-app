@@ -96,12 +96,12 @@ function PromReminderCard({ prom }: { prom: PromStatus }) {
       </View>
       <View style={{ flex: 1 }}>
         <Text style={{ fontWeight: '700', color: colors.textPrimary, fontSize: 13.5 }}>
-          Check-in {PROM_STATUS_LABEL[prom.status]}{prom.promName ? `: ${prom.promName}` : ''}
+          Patient form {PROM_STATUS_LABEL[prom.status]}{prom.promName ? `: ${prom.promName}` : ''}
         </Text>
         <Text style={{ fontSize: 12, color: colors.textSecondary, marginTop: 1 }}>
           {canStartInApp
-            ? `A few quick questions about your ${prom.bodyArea.toLowerCase()}`
-            : 'Your care team will complete this with you at your next visit'}
+            ? `Please fill in your ${prom.promName || `${prom.bodyArea} questionnaire`}`
+            : 'Your care team has not sent a patient self-completion form yet'}
         </Text>
       </View>
       {canStartInApp && (
@@ -109,7 +109,7 @@ function PromReminderCard({ prom }: { prom: PromStatus }) {
           onPress={() => router.push(`/prom-fill?token=${prom.accessToken}&promName=${encodeURIComponent(prom.promName || '')}`)}
           style={{ backgroundColor: isOverdue ? colors.danger : colors.warning, paddingHorizontal: 14, paddingVertical: 9, borderRadius: radius.md }}
         >
-          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12.5 }}>Start</Text>
+          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12.5 }}>Fill Form</Text>
         </Pressable>
       )}
     </Card>
@@ -152,7 +152,7 @@ export default function HomeScreen() {
           right={<NotificationBell />}
         />
 
-        <View style={{ paddingHorizontal: spacing.xl, gap: spacing.lg }}>
+        <View style={{ paddingHorizontal: spacing.xl, paddingTop: spacing.md, gap: spacing.lg }}>
           {appointment ? <NextAppointmentCard appointment={appointment} /> : (
             <Card style={{ alignItems: 'center', paddingVertical: spacing.xl }}>
               <ActivityIndicator color={colors.primary} />

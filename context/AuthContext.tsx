@@ -12,6 +12,7 @@ type Session = {
   isLoading: boolean;
   requestOtp: (phone: string) => Promise<{ devOtp?: string }>;
   verifyOtp: (phone: string, code: string) => Promise<void>;
+  updateProfile: (email: string, address: string) => Promise<void>;
   signOut: () => Promise<void>;
 };
 
@@ -63,6 +64,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     setPatient(res.patient);
   };
 
+  const updateProfile = async (email: string, address: string) => {
+    const updated = await patientApi.updateMe(email, address);
+    setPatient(updated);
+  };
+
   const signOut = async () => {
     setAuthToken(null);
     await tokenStorage.deleteItem(TOKEN_KEY).catch(() => {});
@@ -71,7 +77,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   };
 
   const value = useMemo(
-    () => ({ token, patient, isLoading, requestOtp, verifyOtp, signOut }),
+    () => ({ token, patient, isLoading, requestOtp, verifyOtp, updateProfile, signOut }),
     [token, patient, isLoading]
   );
 

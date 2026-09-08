@@ -98,7 +98,7 @@ export default function MessagesScreen() {
       <ScreenHeader title="Messages" subtitle="Chat with your care assistant" />
 
       {messages === null ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: spacing.md }}>
           <ActivityIndicator color={colors.primary} />
         </View>
       ) : (
@@ -106,7 +106,7 @@ export default function MessagesScreen() {
           ref={listRef}
           data={messages}
           keyExtractor={(m) => m.id}
-          contentContainerStyle={{ padding: spacing.lg, flexGrow: 1 }}
+          contentContainerStyle={{ padding: spacing.lg, paddingTop: spacing.xl, flexGrow: 1 }}
           renderItem={({ item }) => <Bubble message={item} />}
           onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: false })}
           ListEmptyComponent={
