@@ -9,6 +9,7 @@ export default function AuthLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="phone" />
       <Stack.Screen name="otp" />
+      <Stack.Screen name="staff-login" />
     </Stack>
   );
 }

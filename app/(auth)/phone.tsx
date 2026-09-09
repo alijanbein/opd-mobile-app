@@ -76,6 +76,10 @@ export default function PhoneScreen() {
         >
           {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14.5 }}>Send Code</Text>}
         </Pressable>
+
+        <Pressable onPress={() => router.push('/staff-login')} style={{ alignItems: 'center', paddingVertical: 8 }}>
+          <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 13 }}>Staff / Admin login</Text>
+        </Pressable>
       </View>
     </KeyboardAvoidingView>
   );

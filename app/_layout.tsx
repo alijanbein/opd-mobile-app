@@ -6,7 +6,7 @@ import { SessionProvider, useSession } from '../context/AuthContext';
 
 function RootNavigator() {
   const { colors } = useTheme();
-  const { token, isLoading } = useSession();
+  const { token, staffToken, isLoading } = useSession();
 
   if (isLoading) {
     return (
@@ -18,14 +18,17 @@ function RootNavigator() {
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Protected guard={!!token}>
+      <Stack.Protected guard={!!staffToken}>
+        <Stack.Screen name="admin/add-patient" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!token && !staffToken}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="report/[id]" />
         <Stack.Screen name="document/[id]" />
         <Stack.Screen name="notifications" />
         <Stack.Screen name="prom-fill" />
       </Stack.Protected>
-      <Stack.Protected guard={!token}>
+      <Stack.Protected guard={!token && !staffToken}>
         <Stack.Screen name="(auth)" />
       </Stack.Protected>
     </Stack>
