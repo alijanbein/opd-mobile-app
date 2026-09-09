@@ -8,6 +8,7 @@ import Card from '../../components/Card';
 import Badge from '../../components/Badge';
 import ScreenHeader from '../../components/ScreenHeader';
 import { useSession } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import {
   getActiveCare, getAppointment, getNotifications, getPromStatus, getPromTrend,
 } from '../../api/patient';
@@ -47,13 +48,14 @@ function NotificationBell() {
 
 function NextAppointmentCard({ appointment }: { appointment: PatientAppointment }) {
   const { colors } = useTheme();
+  const { t } = useLanguage();
   const days = daysUntil(appointment.date);
-  const badgeLabel = days < 0 ? 'Past' : days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `In ${days} days`;
+  const badgeLabel = days < 0 ? t('tabs.home.badge.past') : days === 0 ? t('tabs.home.badge.today') : days === 1 ? t('tabs.home.badge.tomorrow') : t('tabs.home.badge.inDays', { days });
 
   return (
     <Card style={{ padding: 0, overflow: 'hidden', borderColor: colors.primary }}>
       <View style={{ backgroundColor: colors.primary, paddingHorizontal: spacing.lg, paddingVertical: spacing.md, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>NEXT APPOINTMENT</Text>
+        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>{t('tabs.home.nextAppointment')}</Text>
         <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill }}>
           <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>{badgeLabel}</Text>
         </View>
@@ -76,7 +78,7 @@ function NextAppointmentCard({ appointment }: { appointment: PatientAppointment 
   );
 }
 
-const PROM_STATUS_LABEL: Record<PromStatus['status'], string> = {
+const PROM_STATUS_KEY: Record<PromStatus['status'], 'due' | 'overdue' | 'deferred'> = {
   sent_pending: 'due',
   overdue: 'overdue',
   assigned_to_clerk: 'due',
@@ -86,8 +88,10 @@ const PROM_STATUS_LABEL: Record<PromStatus['status'], string> = {
 function PromReminderCard({ prom }: { prom: PromStatus }) {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useLanguage();
   const isOverdue = prom.status === 'overdue';
   const canStartInApp = prom.completionMethod === 'self_completion' && !!prom.accessToken;
+  const statusLabel = t(`tabs.home.promStatus.${PROM_STATUS_KEY[prom.status]}`);
 
   return (
     <Card style={{ borderColor: isOverdue ? colors.danger : colors.warning, backgroundColor: isOverdue ? colors.dangerLight : colors.warningLight, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
@@ -96,12 +100,12 @@ function PromReminderCard({ prom }: { prom: PromStatus }) {
       </View>
       <View style={{ flex: 1 }}>
         <Text style={{ fontWeight: '700', color: colors.textPrimary, fontSize: 13.5 }}>
-          Patient form {PROM_STATUS_LABEL[prom.status]}{prom.promName ? `: ${prom.promName}` : ''}
+          {t('tabs.home.promReminder.title', { status: statusLabel })}{prom.promName ? `: ${prom.promName}` : ''}
         </Text>
         <Text style={{ fontSize: 12, color: colors.textSecondary, marginTop: 1 }}>
           {canStartInApp
-            ? `Please fill in your ${prom.promName || `${prom.bodyArea} questionnaire`}`
-            : 'Your care team has not sent a patient self-completion form yet'}
+            ? t('tabs.home.promReminder.fillPrompt', { name: prom.promName || `${prom.bodyArea} ${t('tabs.home.promReminder.questionnaireSuffix')}` })
+            : t('tabs.home.promReminder.notSent')}
         </Text>
       </View>
       {canStartInApp && (
@@ -109,23 +113,24 @@ function PromReminderCard({ prom }: { prom: PromStatus }) {
           onPress={() => router.push(`/prom-fill?token=${prom.accessToken}&promName=${encodeURIComponent(prom.promName || '')}`)}
           style={{ backgroundColor: isOverdue ? colors.danger : colors.warning, paddingHorizontal: 14, paddingVertical: 9, borderRadius: radius.md }}
         >
-          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12.5 }}>Fill Form</Text>
+          <Text style={{ color: '#fff', fontWeight: '700', fontSize: 12.5 }}>{t('tabs.home.promReminder.fillFormButton')}</Text>
         </Pressable>
       )}
     </Card>
   );
 }
 
-const PROGRESS_LABEL = (trend: PromTrend | null) => {
-  if (!trend || trend.improvement == null) return { label: 'No data yet', color: 'muted' as const };
+const PROGRESS_LABEL = (trend: PromTrend | null, t: (key: string) => string) => {
+  if (!trend || trend.improvement == null) return { label: t('tabs.home.progress.noData'), color: 'muted' as const };
   const better = trend.scoreDirection === 'higher_better' ? trend.improvement > 0 : trend.improvement < 0;
-  if (trend.improvement === 0) return { label: 'Stable', color: 'muted' as const };
-  return better ? { label: 'Improving', color: 'success' as const } : { label: 'Declining', color: 'danger' as const };
+  if (trend.improvement === 0) return { label: t('tabs.home.progress.stable'), color: 'muted' as const };
+  return better ? { label: t('tabs.home.progress.improving'), color: 'success' as const } : { label: t('tabs.home.progress.declining'), color: 'danger' as const };
 };
 
 export default function HomeScreen() {
   const { colors } = useTheme();
   const { patient } = useSession();
+  const { t } = useLanguage();
   const [appointment, setAppointment] = useState<PatientAppointment | null>(null);
   const [prom, setProm] = useState<PromStatus | null>(null);
   const [activeCare, setActiveCare] = useState<ActiveCareItem[] | null>(null);
@@ -140,15 +145,15 @@ export default function HomeScreen() {
     }, [])
   );
 
-  const progress = PROGRESS_LABEL(trend);
+  const progress = PROGRESS_LABEL(trend, t);
   const progressColor = progress.color === 'success' ? colors.success : progress.color === 'danger' ? colors.danger : colors.textMuted;
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }}>
         <ScreenHeader
-          title={`Hi, ${patient?.name?.split(' ')[0] ?? 'there'}`}
-          subtitle="Here's where things stand with your care"
+          title={t('tabs.home.greeting', { name: patient?.name?.split(' ')[0] ?? t('tabs.home.defaultName') })}
+          subtitle={t('tabs.home.subtitle')}
           right={<NotificationBell />}
         />
 
@@ -165,19 +170,19 @@ export default function HomeScreen() {
           <View style={{ flexDirection: 'row', gap: spacing.md }}>
             <Card style={{ flex: 1, alignItems: 'center', gap: 4 }}>
               <Ionicons name="body-outline" size={20} color={colors.primary} />
-              <Text style={{ fontSize: 12, color: colors.textMuted, textAlign: 'center' }}>Treating</Text>
+              <Text style={{ fontSize: 12, color: colors.textMuted, textAlign: 'center' }}>{t('tabs.home.quickStats.treating')}</Text>
               <Text style={{ fontSize: 13, fontWeight: '700', color: colors.textPrimary, textAlign: 'center' }}>{patient?.bodyArea ?? '—'}</Text>
             </Card>
             <Card style={{ flex: 1, alignItems: 'center', gap: 4 }}>
               <Ionicons name="checkmark-done-outline" size={20} color={colors.success} />
-              <Text style={{ fontSize: 12, color: colors.textMuted }}>Active Care</Text>
+              <Text style={{ fontSize: 12, color: colors.textMuted }}>{t('tabs.home.quickStats.activeCare')}</Text>
               <Text style={{ fontSize: 13, fontWeight: '700', color: colors.textPrimary }}>
-                {activeCare ? `${activeCare.length} item${activeCare.length === 1 ? '' : 's'}` : '—'}
+                {activeCare ? t(activeCare.length === 1 ? 'tabs.home.activeCare.oneItem' : 'tabs.home.activeCare.manyItems', { count: activeCare.length }) : '—'}
               </Text>
             </Card>
             <Card style={{ flex: 1, alignItems: 'center', gap: 4 }}>
               <Ionicons name="trending-up-outline" size={20} color={colors.info} />
-              <Text style={{ fontSize: 12, color: colors.textMuted }}>Progress</Text>
+              <Text style={{ fontSize: 12, color: colors.textMuted }}>{t('tabs.home.quickStats.progress')}</Text>
               <Text style={{ fontSize: 13, fontWeight: '700', color: progressColor }}>{progress.label}</Text>
             </Card>
           </View>
@@ -185,7 +190,7 @@ export default function HomeScreen() {
           {/* Current care plan */}
           {activeCare && activeCare.length > 0 && (
             <View>
-              <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginBottom: 10 }}>Your Care Plan</Text>
+              <Text style={{ fontSize: 14, fontWeight: '800', color: colors.textPrimary, marginBottom: 10 }}>{t('tabs.home.activeCare.title')}</Text>
               <View style={{ gap: 10 }}>
                 {activeCare.map((item) => (
                   <Card key={item.id} style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: spacing.md }}>
@@ -198,7 +203,7 @@ export default function HomeScreen() {
                       <Text style={{ fontWeight: '700', color: colors.textPrimary, fontSize: 13.5 }}>{item.title}</Text>
                       {item.detail ? <Text style={{ fontSize: 12, color: colors.textMuted, marginTop: 1 }}>{item.detail}</Text> : null}
                     </View>
-                    <Badge label={item.kind === 'treatment' ? 'Treatment' : 'Test'} tone={item.kind === 'treatment' ? 'success' : 'primary'} />
+                    <Badge label={item.kind === 'treatment' ? t('tabs.home.activeCare.treatment') : t('tabs.home.activeCare.test')} tone={item.kind === 'treatment' ? 'success' : 'primary'} />
                   </Card>
                 ))}
               </View>

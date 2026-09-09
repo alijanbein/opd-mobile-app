@@ -1,0 +1,52 @@
+{
+  "addPatient": {
+    "title": "Add Patient",
+    "staffAdmin": "Staff admin",
+    "scanQrButton": "Scan hospital QR code",
+    "qrHelperText": "The QR code must not contain the patient name. MRN is the required patient identifier; name is optional.",
+    "patientDetails": "Patient details",
+    "fields": {
+      "name": "Patient name (optional)",
+      "mrn": "MRN / hospital ID",
+      "dob": "Date of birth (YYYY-MM-DD)",
+      "age": "Age",
+      "gender": "Gender",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "bloodType": "Blood type",
+      "allergies": "Allergies",
+      "bodyArea": "Body area",
+      "appointmentDate": "Appointment date (YYYY-MM-DD)",
+      "appointmentTime": "Appointment time"
+    },
+    "submitButton": "Add patient",
+    "notices": {
+      "qrLoadedTitle": "QR data loaded",
+      "qrLoadedMessage": "Patient data was loaded. Confirm it before saving. The MRN identifies this patient.",
+      "qrInvalidTitle": "Invalid QR code",
+      "qrInvalidMessage": "Scan the hospital patient QR code containing JSON data.",
+      "cameraPermissionTitle": "Camera permission needed",
+      "cameraPermissionMessage": "Allow camera access to scan the hospital QR code.",
+      "missingDetailsTitle": "Missing details",
+      "missingDetailsMessage": "MRN, date of birth, body area, and appointment date are required.",
+      "saveFailedTitle": "Could not add patient",
+      "saveFailedFallback": "Please check the details and try again."
+    },
+    "scanOverlayHint": "Point the camera at the hospital patient QR code",
+    "successModal": {
+      "title": "Patient added successfully",
+      "message": "The patient record is now available in the hospital system.",
+      "mrnLabel": "MRN",
+      "bodyAreaLabel": "Body area",
+      "addAnotherButton": "Add another patient",
+      "doneButton": "Done"
+    },
+    "duplicateModal": {
+      "title": "Patient already added",
+      "message": "This MRN already belongs to a patient record. No duplicate was created.",
+      "existingMrnLabel": "Existing MRN",
+      "reviewButton": "Review patient details"
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { ActivityIndicator, FlatList, Pressable, RefreshControl, Text, View } fr
 import { useFocusEffect, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/useTheme';
+import { useLanguage } from '../context/LanguageContext';
 import { spacing, radius } from '../theme/colors';
 import {
   getNotifications, markNotificationRead, markAllNotificationsRead,
@@ -11,6 +12,7 @@ import type { PatientNotification } from '../api/patient';
 
 export default function NotificationsScreen() {
   const { colors } = useTheme();
+  const { t } = useLanguage();
   const router = useRouter();
   const [items, setItems] = useState<PatientNotification[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -65,11 +67,11 @@ export default function NotificationsScreen() {
           <Pressable onPress={() => router.back()} hitSlop={10}>
             <Ionicons name="chevron-back" size={24} color={colors.textPrimary} />
           </Pressable>
-          <Text style={{ fontSize: 17, fontWeight: '800', color: colors.textPrimary }}>Notifications</Text>
+          <Text style={{ fontSize: 17, fontWeight: '800', color: colors.textPrimary }}>{t('misc.notifications.title')}</Text>
         </View>
         {hasUnread ? (
           <Pressable onPress={markAllRead}>
-            <Text style={{ color: colors.primary, fontWeight: '700', fontSize: 12.5 }}>Mark all read</Text>
+            <Text style={{ color: colors.primary, fontWeight: '700', fontSize: 12.5 }}>{t('misc.notifications.markAllRead')}</Text>
           </Pressable>
         ) : null}
       </View>
@@ -88,7 +90,7 @@ export default function NotificationsScreen() {
           ListEmptyComponent={
             <View style={{ alignItems: 'center', paddingVertical: spacing.xxl, gap: 8 }}>
               <Ionicons name="notifications-outline" size={28} color={colors.textMuted} />
-              <Text style={{ color: colors.textMuted, fontSize: 13 }}>Nothing here yet</Text>
+              <Text style={{ color: colors.textMuted, fontSize: 13 }}>{t('misc.notifications.empty')}</Text>
             </View>
           }
           renderItem={({ item }) => (

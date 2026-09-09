@@ -1,0 +1,33 @@
+{
+  "document": {
+    "loadError": "Could not load this image."
+  },
+  "report": {
+    "title": "Visit Report",
+    "noDiagnosis": "No diagnosis recorded",
+    "summaryHeading": "Summary",
+    "attachedDocuments": "Attached Documents",
+    "loadError": "This report could not be loaded.",
+    "reportTypes": {
+      "physician": "Physician Evaluation",
+      "surgery": "Surgery Evaluation"
+    },
+    "soapSections": {
+      "chiefComplaint": "Chief Complaint",
+      "historyOfPresentIllness": "History of Present Illness",
+      "pastMedicalHistory": "Past Medical History",
+      "examination": "Examination",
+      "assessment": "Assessment",
+      "plan": "Plan"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all read",
+    "empty": "Nothing here yet"
+  },
+  "promFill": {
+    "fallbackTitle": "Patient Form",
+    "configMissing": "EXPO_PUBLIC_WEB_APP_BASE_URL is not set — see .env.example."
+  }
+}

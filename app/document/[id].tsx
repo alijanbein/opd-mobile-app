@@ -6,6 +6,7 @@ import * as Sharing from 'expo-sharing';
 import { useTheme } from '../../theme/useTheme';
 import { spacing } from '../../theme/colors';
 import { useSession } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { documentFileUrl } from '../../api/patient';
 import { downloadDocument } from '../../lib/downloadDocument';
 
@@ -13,6 +14,7 @@ export default function DocumentViewerScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const { token } = useSession();
+  const { t } = useLanguage();
   const { id, name } = useLocalSearchParams<{ id: string; name?: string }>();
   const [uri, setUri] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +23,7 @@ export default function DocumentViewerScreen() {
     if (!id) return;
     downloadDocument(documentFileUrl(id), token, name || `${id}.jpg`)
       .then((file) => setUri(file.uri))
-      .catch(() => setError('Could not load this image.'));
+      .catch(() => setError(t('misc.document.loadError')));
   }, [id]);
 
   const share = async () => {

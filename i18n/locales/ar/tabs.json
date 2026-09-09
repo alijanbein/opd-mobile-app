@@ -1,0 +1,77 @@
+{
+  "tabBar": {
+    "home": "الرئيسية",
+    "journey": "المسيرة العلاجية",
+    "messages": "الرسائل",
+    "profile": "الملف الشخصي"
+  },
+  "home": {
+    "greeting": "مرحباً، {{name}}",
+    "defaultName": "بك",
+    "subtitle": "إليك آخر مستجدات رعايتك الصحية",
+    "nextAppointment": "الموعد القادم",
+    "badge": {
+      "past": "سابق",
+      "today": "اليوم",
+      "tomorrow": "غداً",
+      "inDays": "خلال {{days}} أيام"
+    },
+    "promStatus": {
+      "due": "مستحق",
+      "overdue": "متأخر",
+      "deferred": "مؤجل"
+    },
+    "promReminder": {
+      "title": "استمارة المريض {{status}}",
+      "fillPrompt": "يرجى تعبئة {{name}}",
+      "questionnaireSuffix": "استبيان",
+      "notSent": "لم يرسل فريق رعايتك بعد استمارة للتعبئة الذاتية",
+      "fillFormButton": "تعبئة الاستمارة"
+    },
+    "progress": {
+      "noData": "لا توجد بيانات بعد",
+      "stable": "مستقر",
+      "improving": "في تحسن",
+      "declining": "في تراجع"
+    },
+    "quickStats": {
+      "treating": "قيد العلاج",
+      "activeCare": "الرعاية الحالية",
+      "progress": "التقدم"
+    },
+    "activeCare": {
+      "oneItem": "عنصر واحد",
+      "manyItems": "{{count}} عناصر",
+      "title": "خطة رعايتك",
+      "treatment": "علاج",
+      "test": "فحص"
+    }
+  },
+  "journey": {
+    "title": "مسيرتك العلاجية",
+    "subtitle": "الزيارات والمتابعات وما طلبه طبيبك",
+    "progressTitle": "تقدمك",
+    "fromBaseline": "{{value}} عن القيمة الأساسية",
+    "noCheckins": "لا توجد متابعات مسجلة بعد — ستظهر هنا فور إتمام استبيان تقييم النتائج.",
+    "missingCheckins": "المتابعات المفقودة تظهر كفراغات — نحن لا نضع قيماً تقديرية أبداً.",
+    "visitReports": "تقارير الزيارات",
+    "loadError": "تعذر تحميل سجل زياراتك.",
+    "noReports": "لا توجد تقارير زيارات بعد",
+    "reportType": {
+      "physician": "تقييم الطبيب",
+      "surgery": "تقييم الجراحة"
+    },
+    "documents": {
+      "one": "مستند مرفق واحد",
+      "many": "{{count}} مستندات مرفقة"
+    }
+  },
+  "messages": {
+    "title": "الرسائل",
+    "subtitle": "تواصل مع مساعد رعايتك",
+    "careAssistant": "مساعد الرعاية",
+    "emptyTitle": "راسل فريق رعايتك",
+    "emptySubtitle": "لديك أسئلة حول زيارتك أو علاجك؟ أرسل رسالة وسيتواصل معك فريق رعايتك هنا.",
+    "inputPlaceholder": "راسل فريق رعايتك…"
+  }
+}

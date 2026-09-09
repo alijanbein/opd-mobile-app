@@ -4,6 +4,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import { useTheme } from '../theme/useTheme';
+import { useLanguage } from '../context/LanguageContext';
 import { spacing } from '../theme/colors';
 
 // react-native-webview is iOS/Android only — it refuses to render at all on
@@ -27,6 +28,7 @@ function EmbeddedPage({ url, onLoad, style }: { url: string; onLoad: () => void;
 // doctor would otherwise text/print for them.
 export default function PromFillScreen() {
   const { colors } = useTheme();
+  const { t } = useLanguage();
   const router = useRouter();
   const { token, promName } = useLocalSearchParams<{ token: string; promName?: string }>();
   const [loading, setLoading] = useState(true);
@@ -45,14 +47,14 @@ export default function PromFillScreen() {
           <Ionicons name="close" size={24} color={colors.textPrimary} />
         </Pressable>
         <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textPrimary }}>
-          {promName || 'Patient Form'}
+          {promName || t('misc.promFill.fallbackTitle')}
         </Text>
       </View>
 
       {!url ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl }}>
           <Text style={{ color: colors.danger, textAlign: 'center' }}>
-            EXPO_PUBLIC_WEB_APP_BASE_URL is not set — see .env.example.
+            {t('misc.promFill.configMissing')}
           </Text>
         </View>
       ) : (

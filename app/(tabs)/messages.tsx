@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../theme/useTheme';
 import { spacing, radius } from '../../theme/colors';
 import ScreenHeader from '../../components/ScreenHeader';
+import { useLanguage } from '../../context/LanguageContext';
 import { getMessages, sendMessage } from '../../api/patient';
 import type { ChatMessage } from '../../api/patient';
 
@@ -14,13 +15,14 @@ const POLL_INTERVAL_MS = 8000;
 
 function Bubble({ message }: { message: ChatMessage }) {
   const { colors } = useTheme();
+  const { t } = useLanguage();
   const isPatient = message.senderType === 'patient';
   const time = new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return (
     <View style={{ alignItems: isPatient ? 'flex-end' : 'flex-start', marginBottom: spacing.sm }}>
       {!isPatient && (
-        <Text style={{ fontSize: 11, color: colors.textMuted, marginBottom: 2, marginLeft: 4 }}>Care Assistant</Text>
+        <Text style={{ fontSize: 11, color: colors.textMuted, marginBottom: 2, marginLeft: 4 }}>{t('tabs.messages.careAssistant')}</Text>
       )}
       <View
         style={{
@@ -46,6 +48,7 @@ function Bubble({ message }: { message: ChatMessage }) {
 
 export default function MessagesScreen() {
   const { colors } = useTheme();
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
@@ -95,7 +98,7 @@ export default function MessagesScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
-      <ScreenHeader title="Messages" subtitle="Chat with your care assistant" />
+      <ScreenHeader title={t('tabs.messages.title')} subtitle={t('tabs.messages.subtitle')} />
 
       {messages === null ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: spacing.md }}>
@@ -115,10 +118,10 @@ export default function MessagesScreen() {
                 <Ionicons name="chatbubble-ellipses-outline" size={32} color={colors.primary} />
               </View>
               <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textPrimary, textAlign: 'center' }}>
-                Message your care team
+                {t('tabs.messages.emptyTitle')}
               </Text>
               <Text style={{ fontSize: 13, color: colors.textMuted, textAlign: 'center', lineHeight: 19 }}>
-                Questions about your visit or treatment? Send a message and your care team will get back to you here.
+                {t('tabs.messages.emptySubtitle')}
               </Text>
             </View>
           }
@@ -133,7 +136,7 @@ export default function MessagesScreen() {
         <TextInput
           value={draft}
           onChangeText={setDraft}
-          placeholder="Message your care team…"
+          placeholder={t('tabs.messages.inputPlaceholder')}
           placeholderTextColor={colors.textMuted}
           multiline
           style={{
