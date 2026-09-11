@@ -10,8 +10,8 @@ export default function OtpScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const { t } = useLanguage();
-  const { phone: phoneParam, devOtp: devOtpParam } = useLocalSearchParams<{ phone: string; devOtp?: string }>();
-  const phone = phoneParam ?? '';
+  const { mrn: mrnParam, devOtp: devOtpParam } = useLocalSearchParams<{ mrn: string; devOtp?: string }>();
+  const mrn = mrnParam ?? '';
   const { verifyOtp, requestOtp } = useSession();
 
   const [code, setCode] = useState('');
@@ -31,7 +31,7 @@ export default function OtpScreen() {
     setLoading(true);
     setError(null);
     try {
-      await verifyOtp(phone, code.trim());
+      await verifyOtp(mrn, code.trim());
       // Stack.Protected in app/_layout.tsx swaps to the tabs once the
       // session's token is set — no explicit navigation needed here.
     } catch (e: any) {
@@ -46,7 +46,7 @@ export default function OtpScreen() {
     setResending(true);
     setError(null);
     try {
-      const { devOtp: next } = await requestOtp(phone);
+      const { devOtp: next } = await requestOtp(mrn);
       setDevOtp(next);
     } catch (e: any) {
       setError(e?.response?.data?.detail || t('auth.otp.errorResend'));
@@ -68,7 +68,7 @@ export default function OtpScreen() {
         <View style={{ alignItems: 'center', gap: spacing.sm, marginBottom: spacing.lg }}>
           <Text style={{ fontSize: 22, fontWeight: '800', color: colors.textPrimary }}>{t('auth.otp.title')}</Text>
           <Text style={{ fontSize: 13.5, color: colors.textSecondary, textAlign: 'center' }}>
-            {t('auth.otp.subtitle', { phone })}
+            {t('auth.otp.subtitle', { mrn })}
           </Text>
         </View>
 

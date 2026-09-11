@@ -16,8 +16,8 @@ type Session = {
   isStaffAdmin: boolean;
   patient: PatientProfile | AuthPatient | null;
   isLoading: boolean;
-  requestOtp: (phone: string) => Promise<{ devOtp?: string }>;
-  verifyOtp: (phone: string, code: string) => Promise<void>;
+  requestOtp: (mrn: string) => Promise<{ devOtp?: string }>;
+  verifyOtp: (mrn: string, code: string) => Promise<void>;
   staffLogin: (email: string, password: string) => Promise<void>;
   updateProfile: (email: string, address: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -88,13 +88,13 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     })();
   }, []);
 
-  const requestOtp = async (phone: string) => {
-    const res = await patientApi.requestOtp(phone);
+  const requestOtp = async (mrn: string) => {
+    const res = await patientApi.requestOtp(mrn);
     return { devOtp: res.devOtp };
   };
 
-  const verifyOtp = async (phone: string, code: string) => {
-    const res = await patientApi.verifyOtp(phone, code);
+  const verifyOtp = async (mrn: string, code: string) => {
+    const res = await patientApi.verifyOtp(mrn, code);
     setAuthToken(res.access_token);
     await tokenStorage.setItem(TOKEN_KEY, res.access_token);
     setToken(res.access_token);

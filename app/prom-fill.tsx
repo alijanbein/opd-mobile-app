@@ -6,6 +6,7 @@ import { WebView } from 'react-native-webview';
 import { useTheme } from '../theme/useTheme';
 import { useLanguage } from '../context/LanguageContext';
 import { spacing } from '../theme/colors';
+import { resolveWebAppBaseUrl } from '../api/host';
 
 // react-native-webview is iOS/Android only — it refuses to render at all on
 // web ("React Native WebView does not support this platform"). A plain
@@ -33,7 +34,7 @@ export default function PromFillScreen() {
   const { token, promName } = useLocalSearchParams<{ token: string; promName?: string }>();
   const [loading, setLoading] = useState(true);
 
-  const webAppBaseUrl = process.env.EXPO_PUBLIC_WEB_APP_BASE_URL;
+  const webAppBaseUrl = resolveWebAppBaseUrl();
   const url = webAppBaseUrl ? `${webAppBaseUrl}/prom/${token}` : null;
 
   return (

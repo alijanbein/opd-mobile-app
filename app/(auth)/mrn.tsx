@@ -7,27 +7,27 @@ import { radius, spacing } from '../../theme/colors';
 import { useSession } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
-export default function PhoneScreen() {
+export default function MrnScreen() {
   const { colors } = useTheme();
   const router = useRouter();
   const { t } = useLanguage();
   const { requestOtp } = useSession();
-  const [phone, setPhone] = useState('');
+  const [mrn, setMrn] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
-    if (!phone.trim()) return;
+    if (!mrn.trim()) return;
     setLoading(true);
     setError(null);
     try {
-      const { devOtp } = await requestOtp(phone.trim());
+      const { devOtp } = await requestOtp(mrn.trim());
       const query = devOtp
-        ? `phone=${encodeURIComponent(phone.trim())}&devOtp=${devOtp}`
-        : `phone=${encodeURIComponent(phone.trim())}`;
+        ? `mrn=${encodeURIComponent(mrn.trim())}&devOtp=${devOtp}`
+        : `mrn=${encodeURIComponent(mrn.trim())}`;
       router.push(`/otp?${query}`);
     } catch (e: any) {
-      setError(e?.response?.data?.detail || t('auth.phone.error'));
+      setError(e?.response?.data?.detail || t('auth.mrn.error'));
     } finally {
       setLoading(false);
     }
@@ -43,20 +43,21 @@ export default function PhoneScreen() {
           <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
             <Ionicons name="medical" size={28} color={colors.primary} />
           </View>
-          <Text style={{ fontSize: 22, fontWeight: '800', color: colors.textPrimary }}>{t('auth.phone.title')}</Text>
+          <Text style={{ fontSize: 22, fontWeight: '800', color: colors.textPrimary }}>{t('auth.mrn.title')}</Text>
           <Text style={{ fontSize: 13.5, color: colors.textSecondary, textAlign: 'center' }}>
-            {t('auth.phone.subtitle')}
+            {t('auth.mrn.subtitle')}
           </Text>
         </View>
 
         <View style={{ gap: 6 }}>
-          <Text style={{ fontSize: 12.5, fontWeight: '700', color: colors.textSecondary }}>{t('auth.phone.label')}</Text>
+          <Text style={{ fontSize: 12.5, fontWeight: '700', color: colors.textSecondary }}>{t('auth.mrn.label')}</Text>
           <TextInput
-            value={phone}
-            onChangeText={setPhone}
-            placeholder={t('auth.phone.placeholder')}
+            value={mrn}
+            onChangeText={setMrn}
+            placeholder={t('auth.mrn.placeholder')}
             placeholderTextColor={colors.textMuted}
-            keyboardType="phone-pad"
+            autoCapitalize="characters"
+            autoCorrect={false}
             autoFocus
             style={{
               borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface,
@@ -70,17 +71,17 @@ export default function PhoneScreen() {
 
         <Pressable
           onPress={submit}
-          disabled={loading || !phone.trim()}
+          disabled={loading || !mrn.trim()}
           style={{
             backgroundColor: colors.primary, borderRadius: radius.md, paddingVertical: 14,
-            alignItems: 'center', opacity: loading || !phone.trim() ? 0.6 : 1,
+            alignItems: 'center', opacity: loading || !mrn.trim() ? 0.6 : 1,
           }}
         >
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14.5 }}>{t('auth.phone.submit')}</Text>}
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: '700', fontSize: 14.5 }}>{t('auth.mrn.submit')}</Text>}
         </Pressable>
 
         <Pressable onPress={() => router.push('/staff-login')} style={{ alignItems: 'center', paddingVertical: 8 }}>
-          <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 13 }}>{t('auth.phone.staffLogin')}</Text>
+          <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 13 }}>{t('auth.mrn.staffLogin')}</Text>
         </Pressable>
       </View>
     </KeyboardAvoidingView>

@@ -1,4 +1,5 @@
 import api from './client';
+import { resolveApiBaseUrl } from './host';
 
 // Mirrors backend/schemas.py's patient-facing response models
 // (PatientRequestOtpResponse, PatientLoginResponse, PatientProfileOut,
@@ -121,18 +122,18 @@ export type PromTrend = {
   improvement?: number | null;
 };
 
-export async function requestOtp(phone: string) {
-  const res = await api.post<{ message: string; phone: string; devOtp?: string }>(
+export async function requestOtp(mrn: string) {
+  const res = await api.post<{ message: string; mrn: string; devOtp?: string }>(
     '/api/patient/auth/request-otp',
-    { phone }
+    { mrn }
   );
   return res.data;
 }
 
-export async function verifyOtp(phone: string, code: string) {
+export async function verifyOtp(mrn: string, code: string) {
   const res = await api.post<{ access_token: string; token_type: string; patient: AuthPatient }>(
     '/api/patient/auth/verify-otp',
-    { phone, code }
+    { mrn, code }
   );
   return res.data;
 }
@@ -172,7 +173,7 @@ export async function markAllNotificationsRead() {
 }
 
 export function documentFileUrl(documentId: string) {
-  return `${process.env.EXPO_PUBLIC_API_BASE_URL}/api/patient/documents/${documentId}/file`;
+  return `${resolveApiBaseUrl()}/api/patient/documents/${documentId}/file`;
 }
 
 export async function getAppointment() {

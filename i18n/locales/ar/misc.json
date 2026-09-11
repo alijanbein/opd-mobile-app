@@ -28,6 +28,6 @@
   },
   "promFill": {
     "fallbackTitle": "نموذج المريض",
-    "configMissing": "لم يتم تعيين EXPO_PUBLIC_WEB_APP_BASE_URL — راجع .env.example."
+    "configMissing": "تعذّر الوصول إلى تطبيق الويب — تأكد من تشغيل خادم Expo للتطوير، أو عيّن EXPO_PUBLIC_WEB_APP_BASE_URL (راجع .env.example)."
   }
 }

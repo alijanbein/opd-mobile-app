@@ -21,7 +21,7 @@ so keeping them decoupled means one doesn't block the other.
 app/
   _layout.tsx           root layout — SessionProvider + Stack.Protected auth gate
   (auth)/
-    phone.tsx              phone number entry -> requests an OTP
+    mrn.tsx                 MRN entry -> requests an OTP
     otp.tsx                 6-digit code entry -> verifies, stores the session
   (tabs)/
     _layout.tsx          bottom tab bar (Home · Journey · Messages · Profile)
@@ -54,8 +54,9 @@ device's system setting automatically (`useColorScheme()`).
 
 All screens are wired to the backend (`../Orthopedic OPD AI/backend`, routers
 `patient_auth.py` / `patient_self.py`):
-- Phone + OTP login, with a patient-scoped JWT (audience-separated from the staff token —
-  see `backend/auth.py`'s `get_current_patient`).
+- MRN + OTP login, with a patient-scoped JWT (audience-separated from the staff token —
+  see `backend/auth.py`'s `get_current_patient`). MRN identifies the patient (unique per
+  `models.Patient`); the OTP itself still goes to the phone number on file.
 - Home: next appointment (`Patient.appointmentDate/Time` + most recent evaluation's
   physician), PROM check-in reminder (real `PROMAssignment` status), active care plan
   (active `Treatment`s + pending `Diagnostic`s), and a progress stat derived from the real
@@ -97,19 +98,24 @@ backend yet, so these aren't backed by anything to "de-mock."
 
 ## Running it
 
-1. Copy `.env.example` to `.env` and set `EXPO_PUBLIC_API_BASE_URL` (backend, port 8000) and
-   `EXPO_PUBLIC_WEB_APP_BASE_URL` (frontend, port 5173 — only needed for the PROM fill-in
-   WebView) to your dev machine's **LAN IP** (not `localhost` — a physical device/emulator
-   can't reach your machine's loopback address). Find it with `ipconfig` (Windows) /
-   `ifconfig` (Mac/Linux). `localhost` is fine if you're testing with `expo start --web` in a
-   browser on the same machine.
+1. Nothing to configure for the common case: `api/host.ts` reads the LAN IP straight off the
+   Metro dev server (`Constants.expoConfig.hostUri`, the address your phone/emulator already
+   used to load the JS bundle) and builds `http://<that-ip>:8000` (backend) and
+   `http://<that-ip>:5173` (web app, for the PROM fill-in WebView) from it automatically. Just
+   run `npx expo start` — it keeps working after switching WiFi/hotspot networks since the
+   host is re-detected on every dev server start, with nothing to edit by hand.
+
+   Only set `.env` (copy from `.env.example`) if you need to override this — e.g. the backend
+   isn't running on the same machine as Metro, or a production/EAS build where there is no dev
+   server to introspect at all. `EXPO_PUBLIC_API_BASE_URL`/`EXPO_PUBLIC_WEB_APP_BASE_URL`, when
+   set, always take priority over the auto-detected host.
 
    > **Node version note:** Expo SDK 57's `.env` loader requires Node ≥ 20.19.4 (uses
    > `node:util.parseEnv`, added in that release). On an older Node, merely having a `.env`
-   > file present crashes `expo start`/`expo export` outright. If you can't upgrade Node
-   > right now, skip the `.env` file and export the vars in your shell instead before running
-   > Expo, e.g. (PowerShell)
-   > `$env:EXPO_PUBLIC_API_BASE_URL="http://<lan-ip>:8000"; $env:EXPO_PUBLIC_WEB_APP_BASE_URL="http://<lan-ip>:5173"; npx expo start`.
+   > file present crashes `expo start`/`expo export` outright. If you can't upgrade Node and
+   > need the override above, export the vars in your shell instead before running Expo, e.g.
+   > (PowerShell)
+   > `$env:EXPO_PUBLIC_API_BASE_URL="http://<lan-ip>:8000"; npx expo start`.
    > For a lasting fix (works in every new terminal without retyping), set them once with
    > `setx` instead, then reopen the terminal.
 
@@ -125,9 +131,9 @@ backend yet, so these aren't backed by anything to "de-mock."
    ```
 
    Scan the QR code with Expo Go (iOS/Android), or press `a` / `i` for an emulator/simulator.
-   Log in with a patient's phone number on file in the backend — since no SMS provider is
-   configured (`OTP_DEV_MODE=true` by default), the code is shown directly on the OTP screen
-   and printed to the backend console.
+   Log in with a patient's MRN on file in the backend — since no SMS provider is configured
+   (`OTP_DEV_MODE=true` by default), the code is shown directly on the OTP screen and printed
+   to the backend console.
 
 ## Next steps
 
