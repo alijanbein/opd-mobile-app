@@ -10,6 +10,7 @@
     "defaultName": "بك",
     "subtitle": "إليك آخر مستجدات رعايتك الصحية",
     "nextAppointment": "الموعد القادم",
+    "lastAppointment": "آخر موعد",
     "badge": {
       "past": "سابق",
       "today": "اليوم",

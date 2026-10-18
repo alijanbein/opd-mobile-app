@@ -10,6 +10,7 @@
     "defaultName": "there",
     "subtitle": "Here's where things stand with your care",
     "nextAppointment": "NEXT APPOINTMENT",
+    "lastAppointment": "LAST APPOINTMENT",
     "badge": {
       "past": "Past",
       "today": "Today",

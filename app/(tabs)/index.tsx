@@ -50,12 +50,13 @@ function NextAppointmentCard({ appointment }: { appointment: PatientAppointment 
   const { colors } = useTheme();
   const { t } = useLanguage();
   const days = daysUntil(appointment.date);
-  const badgeLabel = days < 0 ? t('tabs.home.badge.past') : days === 0 ? t('tabs.home.badge.today') : days === 1 ? t('tabs.home.badge.tomorrow') : t('tabs.home.badge.inDays', { days });
+  const isPast = appointment.isPast ?? days < 0;
+  const badgeLabel = isPast ? t('tabs.home.badge.past') : days === 0 ? t('tabs.home.badge.today') : days === 1 ? t('tabs.home.badge.tomorrow') : t('tabs.home.badge.inDays', { days });
 
   return (
     <Card style={{ padding: 0, overflow: 'hidden', borderColor: colors.primary }}>
       <View style={{ backgroundColor: colors.primary, paddingHorizontal: spacing.lg, paddingVertical: spacing.md, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>{t('tabs.home.nextAppointment')}</Text>
+        <Text style={{ color: '#fff', fontWeight: '700', fontSize: 13 }}>{t(isPast ? 'tabs.home.lastAppointment' : 'tabs.home.nextAppointment')}</Text>
         <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill }}>
           <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>{badgeLabel}</Text>
         </View>
@@ -64,7 +65,7 @@ function NextAppointmentCard({ appointment }: { appointment: PatientAppointment 
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <Ionicons name="calendar-outline" size={18} color={colors.primary} />
           <Text style={{ fontSize: 16, fontWeight: '800', color: colors.textPrimary }}>
-            {new Date(appointment.date).toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long' })} · {appointment.time}
+            {new Date(appointment.date).toLocaleDateString('en-GB', { weekday: 'long', day: '2-digit', month: 'long' })}{appointment.time ? ` · ${appointment.time}` : ''}
           </Text>
         </View>
         {appointment.physicianName ? (

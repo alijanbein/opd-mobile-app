@@ -69,6 +69,7 @@ export type PatientAppointment = {
   date: string;
   time: string;
   physicianName?: string | null;
+  isPast?: boolean;
 };
 
 export type ChatMessage = {
