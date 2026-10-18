@@ -1,0 +1,33 @@
+{
+  "document": {
+    "loadError": "تعذر تحميل هذه الصورة."
+  },
+  "report": {
+    "title": "تقرير الزيارة",
+    "noDiagnosis": "لا يوجد تشخيص مسجل",
+    "summaryHeading": "الملخص",
+    "attachedDocuments": "المستندات المرفقة",
+    "loadError": "تعذر تحميل هذا التقرير.",
+    "reportTypes": {
+      "physician": "تقييم الطبيب",
+      "surgery": "تقييم الجراحة"
+    },
+    "soapSections": {
+      "chiefComplaint": "الشكوى الرئيسية",
+      "historyOfPresentIllness": "تاريخ المرض الحالي",
+      "pastMedicalHistory": "التاريخ المرضي السابق",
+      "examination": "الفحص",
+      "assessment": "التقييم",
+      "plan": "الخطة"
+    }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تمييز الكل كمقروء",
+    "empty": "لا توجد إشعارات بعد"
+  },
+  "promFill": {
+    "fallbackTitle": "نموذج المريض",
+    "configMissing": "تعذّر الوصول إلى تطبيق الويب — تأكد من تشغيل خادم Expo للتطوير، أو عيّن EXPO_PUBLIC_WEB_APP_BASE_URL (راجع .env.example)."
+  }
+}

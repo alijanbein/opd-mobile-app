@@ -1,0 +1,78 @@
+{
+  "tabBar": {
+    "home": "Home",
+    "journey": "Journey",
+    "messages": "Messages",
+    "profile": "Profile"
+  },
+  "home": {
+    "greeting": "Hi, {{name}}",
+    "defaultName": "there",
+    "subtitle": "Here's where things stand with your care",
+    "nextAppointment": "NEXT APPOINTMENT",
+    "lastAppointment": "LAST APPOINTMENT",
+    "badge": {
+      "past": "Past",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "inDays": "In {{days}} days"
+    },
+    "promStatus": {
+      "due": "due",
+      "overdue": "overdue",
+      "deferred": "deferred"
+    },
+    "promReminder": {
+      "title": "Patient form {{status}}",
+      "fillPrompt": "Please fill in your {{name}}",
+      "questionnaireSuffix": "questionnaire",
+      "notSent": "Your care team has not sent a patient self-completion form yet",
+      "fillFormButton": "Fill Form"
+    },
+    "progress": {
+      "noData": "No data yet",
+      "stable": "Stable",
+      "improving": "Improving",
+      "declining": "Declining"
+    },
+    "quickStats": {
+      "treating": "Treating",
+      "activeCare": "Active Care",
+      "progress": "Progress"
+    },
+    "activeCare": {
+      "oneItem": "{{count}} item",
+      "manyItems": "{{count}} items",
+      "title": "Your Care Plan",
+      "treatment": "Treatment",
+      "test": "Test"
+    }
+  },
+  "journey": {
+    "title": "Your Journey",
+    "subtitle": "Visits, check-ins, and what your doctor has asked for",
+    "progressTitle": "Your Progress",
+    "fromBaseline": "{{value}} from baseline",
+    "noCheckins": "No check-ins scored yet — this fills in once a PROM questionnaire is completed.",
+    "missingCheckins": "Missing check-ins show as gaps — we never invent a score.",
+    "visitReports": "Visit Reports",
+    "loadError": "Could not load your visit history.",
+    "noReports": "No visit reports yet",
+    "reportType": {
+      "physician": "Physician Evaluation",
+      "surgery": "Surgery Evaluation"
+    },
+    "documents": {
+      "one": "{{count}} attached document",
+      "many": "{{count}} attached documents"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Chat with your care assistant",
+    "careAssistant": "Care Assistant",
+    "emptyTitle": "Message your care team",
+    "emptySubtitle": "Questions about your visit or treatment? Send a message and your care team will get back to you here.",
+    "inputPlaceholder": "Message your care team…"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "الملف الشخصي"
+  },
+  "logout": {
+    "title": "تسجيل الخروج",
+    "message": "هل أنت متأكد من رغبتك في تسجيل الخروج؟"
+  },
+  "phone": {
+    "label": "الهاتف",
+    "alertTitle": "رقم الهاتف",
+    "alertMessage": "لتغيير رقم هاتفك، يرجى التواصل مع العيادة."
+  },
+  "personalDetails": {
+    "label": "البيانات الشخصية",
+    "subtitle": "قم بتحديث بيانات التواصل التي يستخدمها فريق رعايتك.",
+    "emailPlaceholder": "البريد الإلكتروني",
+    "addressPlaceholder": "العنوان"
+  },
+  "privacy": {
+    "label": "الخصوصية والأمان",
+    "alertTitle": "الخصوصية والأمان",
+    "alertMessage": "حسابك محمي بواسطة التحقق برمز لمرة واحدة عبر الهاتف. تواصل مع العيادة إذا احتجت مساعدة في الوصول لحسابك."
+  },
+  "preferences": {
+    "sectionTitle": "التفضيلات",
+    "notifications": "الإشعارات",
+    "appointmentReminders": "تذكيرات المواعيد",
+    "appearance": "المظهر",
+    "appearanceValue": "تلقائي",
+    "appearanceAlertTitle": "المظهر",
+    "appearanceAlertMessage": "يتبع التطبيق إعداد الوضع الفاتح أو الداكن في هاتفك."
+  },
+  "support": {
+    "sectionTitle": "الدعم",
+    "helpFaq": "المساعدة والأسئلة الشائعة",
+    "helpFaqAlertMessage": "للمساعدة بخصوص المواعيد أو الاستمارات أو حسابك، تواصل مع العيادة.",
+    "contactClinic": "التواصل مع العيادة",
+    "contactClinicAlertMessage": "يرجى الاتصال بالعيادة باستخدام رقم الهاتف الذي زودك به فريق رعايتك."
+  },
+  "missingDetails": {
+    "title": "بيانات ناقصة",
+    "message": "يرجى إدخال البريد الإلكتروني والعنوان معاً."
+  },
+  "saveError": {
+    "title": "تعذر الحفظ",
+    "fallback": "يرجى المحاولة مرة أخرى."
+  },
+  "saveSuccess": {
+    "title": "تم تحديث الملف الشخصي",
+    "message": "تم حفظ بيانات التواصل الخاصة بك."
+  }
+}

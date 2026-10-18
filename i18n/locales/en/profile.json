@@ -1,0 +1,53 @@
+{
+  "header": {
+    "title": "Profile"
+  },
+  "logout": {
+    "title": "Log Out",
+    "message": "Are you sure you want to log out?"
+  },
+  "phone": {
+    "label": "Phone",
+    "alertTitle": "Phone number",
+    "alertMessage": "To change your phone number, please contact the clinic."
+  },
+  "personalDetails": {
+    "label": "Personal Details",
+    "subtitle": "Update the contact details your care team uses.",
+    "emailPlaceholder": "Email address",
+    "addressPlaceholder": "Address"
+  },
+  "privacy": {
+    "label": "Privacy & Security",
+    "alertTitle": "Privacy & Security",
+    "alertMessage": "Your account is protected by one-time phone verification. Contact the clinic if you need help with access."
+  },
+  "preferences": {
+    "sectionTitle": "Preferences",
+    "notifications": "Notifications",
+    "appointmentReminders": "Appointment Reminders",
+    "appearance": "Appearance",
+    "appearanceValue": "Automatic",
+    "appearanceAlertTitle": "Appearance",
+    "appearanceAlertMessage": "The app follows your phone's light or dark mode setting."
+  },
+  "support": {
+    "sectionTitle": "Support",
+    "helpFaq": "Help & FAQ",
+    "helpFaqAlertMessage": "For help with appointments, forms, or your account, contact the clinic.",
+    "contactClinic": "Contact the Clinic",
+    "contactClinicAlertMessage": "Please call the clinic using the phone number provided by your care team."
+  },
+  "missingDetails": {
+    "title": "Missing details",
+    "message": "Please enter both an email address and an address."
+  },
+  "saveError": {
+    "title": "Could not save",
+    "fallback": "Please try again."
+  },
+  "saveSuccess": {
+    "title": "Profile updated",
+    "message": "Your contact details have been saved."
+  }
+}

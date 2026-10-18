@@ -1,0 +1,19 @@
+{
+  "save": "Save",
+  "cancel": "Cancel",
+  "close": "Close",
+  "back": "Back",
+  "next": "Next",
+  "loading": "Loading...",
+  "error": "Error",
+  "retry": "Retry",
+  "language": "Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "chooseLanguage": "Choose your language",
+  "chooseLanguageSubtitle": "Select the language you'd like to use in the app. You can change this later in Settings.",
+  "continue": "Continue",
+  "patient": "Patient",
+  "physician": "Physician",
+  "nurse": "Nurse"
+}
